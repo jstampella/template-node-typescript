@@ -15,3 +15,7 @@ ignorePatterns:
   - node_modules/
   - build/
   - global.d.ts
+rules:
+  linebreak-style:
+    - error
+    - unix
