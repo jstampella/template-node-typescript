@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createLogger, format, transports } from 'winston';
 import moment from 'moment-timezone';
 
@@ -5,7 +6,7 @@ import moment from 'moment-timezone';
 const serverTimezone = moment.tz.guess();
 
 // Función para la configuración de timestamp
-const getTimestampConfig = () => {
+const getTimestampConfig = (): any => {
   return timestamp({
     format: () => moment().tz(serverTimezone).format(),
   });

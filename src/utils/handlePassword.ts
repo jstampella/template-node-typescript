@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
  * contraseña sin encriptar
  * @param {*} passwordPlain
  */
-const encrypt = async (passwordPlain: string) => {
+const encrypt = async (passwordPlain: string): Promise<string> => {
   const hash = await bcryptjs.hash(passwordPlain, 10);
   return hash;
 };
@@ -14,7 +14,7 @@ const encrypt = async (passwordPlain: string) => {
  * pasar contraseña encriptada
  * @param {*} hashPassword
  */
-const compare = async (passwordPlain: string, hashPassword: string) => {
+const compare = async (passwordPlain: string, hashPassword: string): Promise<boolean> => {
   return await bcryptjs.compare(passwordPlain, hashPassword);
 };
 

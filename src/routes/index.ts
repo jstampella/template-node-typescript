@@ -2,7 +2,10 @@ import { Router, RequestHandler } from 'express';
 import asyncHandler from 'express-async-handler';
 import { readdirSync } from 'fs';
 import { MyRouter } from '../interfaces/route.interfaces';
-
+/**
+ * Este archivo realiza la lectura de la carpeta routes y va devolviendo las rutas de cada archivo
+ * ignorando el index.ts
+ */
 const PATH_ROUTER = `${__dirname}`;
 const router: Router = Router();
 

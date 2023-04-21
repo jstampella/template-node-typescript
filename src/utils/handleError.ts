@@ -1,9 +1,10 @@
 import { Response } from 'express';
 import logger from '../config/winston';
+import { httpResponse } from './handleResponse';
 
-const handleHttpError = (res: Response, message = 'Algo sucedio', code = 403, extra = '') => {
+const handleHttpError = (res: Response, message = 'Algo sucedio', code = 403, extra = ''): void => {
   logger.error(`${message} | extra: ${extra} | code:${code}`);
-  res.status(code).send({ error: message });
+  httpResponse(res, code, { status: 'error', message });
 };
 
 export { handleHttpError };

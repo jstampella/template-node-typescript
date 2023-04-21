@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult as validate } from 'express-validator';
 
-const validateResults = (req: Request, res: Response, next: NextFunction) => {
+const validateResults = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validate(req);
 
   if (errors.isEmpty()) {
@@ -9,10 +9,10 @@ const validateResults = (req: Request, res: Response, next: NextFunction) => {
   }
 
   const err = {
-    errors: errors.array(),
+    errors: errors.mapped(),
   };
 
-  return res.status(403).json(err);
+  res.status(403).json(err);
 };
 
 export { validateResults };

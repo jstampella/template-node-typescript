@@ -1,38 +1,52 @@
 import jwt from 'jsonwebtoken';
-import { IUsers } from '../interfaces/users.interfaces';
-const JWT_SECRET = process.env.JWT_SECRET as jwt.Secret;
+import { AccessTokenData, AccessTokenPayload, RefreshTokenData, RefreshTokenPAyload } from '../interfaces/jwt.interfaces';
+import MiExcepcion from '../common/MiException';
+const JWT_SECRET = process.env.JWT_SECRET as string;
 
-/**
- * Debes de pasar el objeto del usuario
- * @param {*} user
- */
-const tokenSign = async (user: IUsers) => {
-  console.log(user);
-  const sign = jwt.sign(
-    {
-      _id: user._id,
-      role: user.role,
-    },
-    JWT_SECRET,
-    {
-      expiresIn: '2h',
-    }
-  );
-
-  return sign;
+// Genera un access token
+const generateAccessToken = (user: AccessTokenPayload): string => {
+  const payload: AccessTokenData = {
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 60 * 60, // expira en 1 hora
+  };
+  return jwt.sign(payload, JWT_SECRET);
 };
 
-/**
- * debe de pasar el token de sesion el JWT
- * @param {*} tokenJwt
- * @returns
- */
-const verifyToken = async (tokenJwt: string) => {
+// Genera un refresh token
+const generateRefreshToken = (user: RefreshTokenPAyload): string => {
+  const payload: RefreshTokenData = {
+    _id: user._id,
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60, // expira en 7 días
+  };
+  return jwt.sign(payload, JWT_SECRET);
+};
+
+// Decodifica un access token
+const decodeAccessToken = (token: string): AccessTokenData => {
   try {
-    return jwt.verify(tokenJwt, JWT_SECRET);
-  } catch (error) {
-    return null;
+    const decoded = jwt.verify(token, JWT_SECRET) as AccessTokenData;
+    return decoded;
+  } catch (err) {
+    throw new Error('Token inválido');
+  }
+};
+/**
+ *
+ * @param token debe ingresar un string
+ * @returns un objeto RefreshTokenData
+ */
+// Decodifica un refresh token
+const decodeRefreshToken = (token: string): RefreshTokenData => {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as RefreshTokenData;
+    return decoded;
+  } catch (err) {
+    throw new MiExcepcion('Token inválido', 400);
   }
 };
 
-export { tokenSign, verifyToken };
+export { generateAccessToken, generateRefreshToken, decodeAccessToken, decodeRefreshToken };
